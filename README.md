@@ -1,12 +1,15 @@
-# aci-demos
-
-## Demos with ACI
+---
+services: containerservice, containerinstances, virtual-kubelet
+platforms: azure
+author: ribhatia
+---
+# Bursting from AKS to ACI with the Virtual Kubelet
 
 Description: Run a facial recognition demo across your AKS cluster and use ACI and the ACI Connector to burst into for on-demand compute.
 
 Contact ria.bhatia@microsoft.com if you need help!
 
-steps to deploy dis demo & talking tips
+Steps to deploy
 
 ### Part 1 Prerequisites
 
