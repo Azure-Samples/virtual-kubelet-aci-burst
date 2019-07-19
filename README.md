@@ -1,8 +1,10 @@
 ---
-services: containerservice, containerinstances, virtual-kubelet
-platforms: azure
-author: ribhatia
+languages: []
+page_type: sample
+products:
+- azure
 ---
+
 # Bursting from AKS to ACI with the Virtual Kubelet
 
 Description: Run a facial recognition demo across your AKS cluster and use ACI and the ACI Connector to burst into for on-demand compute.
