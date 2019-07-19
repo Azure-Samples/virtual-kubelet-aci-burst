@@ -1,8 +1,11 @@
 ---
-languages: []
+languages:
+- python
 page_type: sample
+description: "Run a facial recognition demo across your AKS cluster and use ACI and the ACI Connector to burst into for on-demand compute."
 products:
 - azure
+- azure-container-instances
 ---
 
 # Bursting from AKS to ACI with the Virtual Kubelet
