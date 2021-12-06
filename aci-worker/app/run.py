@@ -108,7 +108,7 @@ while True:
     if(not dbHelper.getImageFromAzureBlob(filename, PICTURE_DIR + filename)):
         msg = "Failed to get image " + filename
         print(msg)
-        sleep(5)
+        time.sleep(5)
         continue
 
     download_end_time = datetime.datetime.utcnow()
