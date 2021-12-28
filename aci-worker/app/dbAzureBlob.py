@@ -12,22 +12,18 @@ COPY_PICS_NUM = 1
 class DbAzureBlob:
     
     def __init__(self):
-        # AZURE_BLOB_ACCOUNT = os.environ.get('AZURE_BLOB_ACCOUNT')
         AZURE_STORAGE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+        AZURE_STORAGE_CONTAINER_NAME = os.getenv("AZURE_STORAGE_CONTAINER_NAME")
 
         if not AZURE_STORAGE_CONNECTION_STRING:
             raise EnvironmentError("Must have env variables AZURE_STORAGE_CONNECTION_STRING set for this to work.")
 
-        # self.block_blob_service = BlockBlobService(account_name= AZURE_BLOB_ACCOUNT)
-        # self.block_blob_service = BlobClient.from_connection_string(
-        #     conn_str=AZURE_STORAGE_CONNECTION_STRING, container_name="my_container", blob_name="my_blob")
-        block_container_service = ContainerClient.from_connection_string(
-            conn_str=AZURE_STORAGE_CONNECTION_STRING, container_name="test1")
+        self.block_container_service = ContainerClient.from_connection_string(
+            conn_str=AZURE_STORAGE_CONNECTION_STRING, container_name=AZURE_STORAGE_CONTAINER_NAME)
 
 
     def getImageFromAzureBlob(self,filename_src, filename_dest):
         try:
-            # self.block_blob_service.get_blob_to_path('pictures', filename_src, filename_dest)
             with open(filename_dest, "wb") as my_blob:
                 blob_data = self.block_container_service.download_blob(filename_src)
                 blob_data.readinto(my_blob)
@@ -38,14 +34,12 @@ class DbAzureBlob:
 
 
     def getAllImagesFromAzureBlob(self, dest_folder):
-        # generator = self.block_blob_service.list_blobs('pictures')
         generator = self.block_container_service.list_blobs()
 
         success = []
 
         for blob in generator:
             try:
-                # self.block_blob_service.get_blob_to_path(container, blob.name, dest_folder + blob.name)
                 with open(dest_folder + blob.name, "wb") as my_blob:
                     blob_data = self.block_container_service.download_blob(blob.name)
                     blob_data.readinto(my_blob)
@@ -90,7 +84,6 @@ class DbAzureBlob:
 
         conn.execute('INSERT INTO time values(1,"2017-09-23 18:28:24","2017-09-23 18:28:24",0,0);')
 
-        # generator = self.block_blob_service.list_blobs('pictures')
         generator = self.block_container_service.list_blobs()
         for blob in generator:
             if(blob.name[:2] == "._"):

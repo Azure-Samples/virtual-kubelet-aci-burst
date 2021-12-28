@@ -27,7 +27,7 @@ def detect(img, cascade, eyeCascade):                       # Figure out if the 
     rects, eyes = [], []
     try:
         rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30),flags=cv2.CASCADE_SCALE_IMAGE)
-        print ("rects", rects)
+        print("rects", rects)
         for (x,y,w,h) in rects: 
             roi_gray = gray[y:y+h, x:x+w]
             eyes = eyeCascade.detectMultiScale(roi_gray)
@@ -120,8 +120,8 @@ while True:
         print("Image is none!")
         continue
 
-    cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
-    eyeCascade = cv2.CascadeClassifier('./haarcascade_eye.xml')
+    cascade = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_frontalface_default.xml')
+    eyeCascade = cv2.CascadeClassifier(cv2.data.haarcascades + './haarcascade_eye.xml')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray = cv2.equalizeHist(gray)
     face = detect(gray, cascade, eyeCascade)
