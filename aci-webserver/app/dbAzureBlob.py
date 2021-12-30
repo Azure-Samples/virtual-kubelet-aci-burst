@@ -3,7 +3,7 @@
 #Azure Container Service, Azure Container Instances
 #and the experimental ACI-connector
 import os
-from azure.storage.blob import ContainerClient
+from azure.storage.blob import BlobServiceClient
 import sqlite3
 
 
@@ -18,9 +18,11 @@ class DbAzureBlob:
 
         if not AZURE_STORAGE_CONNECTION_STRING:
             raise EnvironmentError("Must have env variables AZURE_STORAGE_CONNECTION_STRING set for this to work.")
+        if not AZURE_STORAGE_CONTAINER_NAME:
+            raise EnvironmentError("Must have env variables AZURE_STORAGE_CONTAINER_NAME set for this to work.")
 
-        self.block_container_service = ContainerClient.from_connection_string(
-            conn_str=AZURE_STORAGE_CONNECTION_STRING, container_name=AZURE_STORAGE_CONTAINER_NAME)
+        self.blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+        self.block_container_service = self.blob_service_client.get_container_client(AZURE_STORAGE_CONTAINER_NAME)
 
 
     def getImageFromAzureBlob(self, filename_src, filename_dest):
