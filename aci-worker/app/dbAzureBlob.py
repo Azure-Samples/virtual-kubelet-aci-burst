@@ -21,13 +21,13 @@ class DbAzureBlob:
             raise EnvironmentError("Must have env variables AZURE_STORAGE_CONTAINER_NAME set for this to work.")
 
         self.blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
-        self.block_container_service = self.blob_service_client.get_container_client(AZURE_STORAGE_CONTAINER_NAME)
+        self.container_service = self.blob_service_client.get_container_client(AZURE_STORAGE_CONTAINER_NAME)
 
 
     def getImageFromAzureBlob(self,filename_src, filename_dest):
         try:
             with open(filename_dest, "wb") as my_blob:
-                blob_data = self.block_container_service.download_blob(filename_src)
+                blob_data = self.container_service.download_blob(filename_src)
                 blob_data.readinto(my_blob)
             return True
         except Exception as ex:
@@ -36,14 +36,14 @@ class DbAzureBlob:
 
 
     def getAllImagesFromAzureBlob(self, dest_folder):
-        generator = self.block_container_service.list_blobs()
+        generator = self.container_service.list_blobs()
 
         success = []
 
         for blob in generator:
             try:
                 with open(dest_folder + blob.name, "wb") as my_blob:
-                    blob_data = self.block_container_service.download_blob(blob.name)
+                    blob_data = self.container_service.download_blob(blob.name)
                     blob_data.readinto(my_blob)
                 success.append(True)
             except Exception as ex:
@@ -86,7 +86,7 @@ class DbAzureBlob:
 
         conn.execute('INSERT INTO time values(1,"2017-09-23 18:28:24","2017-09-23 18:28:24",0,0);')
 
-        generator = self.block_container_service.list_blobs()
+        generator = self.container_service.list_blobs()
         for blob in generator:
             if(blob.name[:2] == "._"):
                 blob.name = blob.name[2:]
