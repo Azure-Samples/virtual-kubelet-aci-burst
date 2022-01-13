@@ -3,7 +3,7 @@
 #Azure Container Service, Azure Container Instances
 #and the experimental ACI-connector
 import os
-from azure.storage.blob import BlockBlobService
+from azure.storage.blob import BlobServiceClient
 import sqlite3
 
 COPY_PICS_NUM = 1
@@ -11,31 +11,39 @@ COPY_PICS_NUM = 1
 class DbAzureBlob:
     
     def __init__(self):
-        AZURE_BLOB_ACCOUNT = os.environ.get('AZURE_BLOB_ACCOUNT')
+        AZURE_STORAGE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+        AZURE_STORAGE_CONTAINER_NAME = os.getenv("AZURE_STORAGE_CONTAINER_NAME")
 
-        if not AZURE_BLOB_ACCOUNT:
-            raise EnvironmentError("Must have env variables AZURE_BLOB_ACCOUNT set for this to work.")
+        if not AZURE_STORAGE_CONNECTION_STRING:
+            raise EnvironmentError("Must have env variables AZURE_STORAGE_CONNECTION_STRING set for this to work.")
+        if not AZURE_STORAGE_CONTAINER_NAME:
+            raise EnvironmentError("Must have env variables AZURE_STORAGE_CONTAINER_NAME set for this to work.")
 
-        self.block_blob_service = BlockBlobService(account_name= AZURE_BLOB_ACCOUNT)
+        self.blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+        self.container_client = self.blob_service_client.get_container_client(AZURE_STORAGE_CONTAINER_NAME)
 
 
-    def getImageFromAzureBlob(self,filename_src, filename_dest):
+    def getImageFromAzureBlob(self, filename_src, filename_dest):
         try:
-            self.block_blob_service.get_blob_to_path('pictures', filename_src, filename_dest)
+            with open(filename_dest, "wb") as my_blob:
+                blob_data = self.container_client.download_blob(filename_src)
+                blob_data.readinto(my_blob)
             return True
         except Exception as ex:
-            print("getImageFromAzureBlob: ")
+            print("getImageFromAzureBlob: ", ex)
             return False
 
 
-    def getAllImagesFromAzureBlob(self,container,dest_folder):
-        generator = self.block_blob_service.list_blobs('pictures')
+    def getAllImagesFromAzureBlob(self, dest_folder):
+        generator = self.container_client.list_blobs()
 
         success = []
 
         for blob in generator:
             try:
-                self.block_blob_service.get_blob_to_path(container, blob.name, dest_folder + blob.name)
+                with open(dest_folder + blob.name, "wb") as my_blob:
+                    blob_data = self.container_client.download_blob(blob.name)
+                    blob_data.readinto(my_blob)
                 success.append(True)
             except Exception as ex:
                 print("getAllImagesFromAzureBlob: ", ex)
@@ -77,7 +85,7 @@ class DbAzureBlob:
 
         conn.execute('INSERT INTO time values(1,"2017-09-23 18:28:24","2017-09-23 18:28:24",0,0);')
 
-        generator = self.block_blob_service.list_blobs('pictures')
+        generator = self.container_client.list_blobs()
         for blob in generator:
             if(blob.name[:2] == "._"):
                 blob.name = blob.name[2:]

@@ -6,7 +6,6 @@
 #and the experimental ACI-connector
 from flask import render_template
 from flask import Flask
-from dbAzureBlob import DbAzureBlob
 import requests
 import json
 
