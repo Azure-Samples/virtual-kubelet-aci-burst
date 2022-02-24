@@ -79,7 +79,7 @@ When the IP assigned, remember the IP address and press Ctrl+Q to exit
 
 Clone this repo
 ```
-$ git clone https://github.com/rbitia/aci-demos.git
+$ git clone https://github.com/Azure-Samples/virtual-kubelet-aci-burst.git
 ```
 
 Change the folder to the root of the source code
@@ -94,7 +94,7 @@ $ chmod u+x assignFQDNtoIP.sh
 $ ./assignFQDNtoIP.sh -g <myResourceGroup> -d <appName> -i <IP Address>
 ```
 
-Edit the values.yaml file and replace all `<host name>` with the FQDN name in pervious step.
+Edit the values.yaml file and replace all `<host name>` with the FQDN name in previous step.
 ```
 $ vim ./charts/fr-demo/values.yaml 
 ```
