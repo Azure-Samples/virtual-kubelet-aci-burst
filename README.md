@@ -69,6 +69,12 @@ Install ingress controller w/ helm.
 $ helm install stable/nginx-ingress --name ingress --namespace kube-system
 ```
 
+If that command fails, you probably don't have [rbac enabled](https://docs.microsoft.com/en-us/azure/aks/ingress#install-an-ingress-controller) in your cluster, so run:
+
+```
+$ helm install stable/nginx-ingress --name ingress --namespace kube-system --set rbac.create=false --set rbac.createRole=false --set rbac.createClusterRole=false
+```
+
 Get the Public IP of the ingress controller. It may take some times for the IP assigned to the services
 
 ```
