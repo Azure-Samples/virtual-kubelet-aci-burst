@@ -84,7 +84,7 @@ $ git clone https://github.com/rbitia/aci-demos.git
 
 Change the folder to the root of the source code
 ```
-$ cd aci-demo
+$ cd aci-demo/vk-burst-demo
 ```
 
 Replace `<myResourceGroup>`, `<IP Address>` with your created in previous steps. Replace `<appName>` with your expected and run following shell script to bind FQDN to your IP. Remember the return FQDN name. You will use it to update your configuration file.
